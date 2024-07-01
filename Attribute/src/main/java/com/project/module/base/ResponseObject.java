@@ -1,4 +1,4 @@
-package com.project.base;
+package com.project.module.base;
 
 
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResponseObject {
     private Boolean success;
-    private String code;
+    private Integer code;
     private String message;
     private Object data;
 }

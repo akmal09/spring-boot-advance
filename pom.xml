@@ -27,6 +27,7 @@
 
 	<modules>
 		<module>module-1</module>
-	</modules>
+        <module>module-2</module>
+    </modules>
 
 </project>
