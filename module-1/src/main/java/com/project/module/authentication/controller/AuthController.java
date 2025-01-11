@@ -1,13 +1,10 @@
 package com.project.module.authentication.controller;
 
-import com.project.module.base.ResponseObject;
 import com.project.module.entities.User;
-import com.project.module.authentication.dto.LoginResponse;
 import com.project.module.authentication.dto.LoginUserDto;
 import com.project.module.authentication.dto.RegisterUserDto;
 import com.project.module.authentication.service.AuthenticationService;
 import com.project.module.authentication.service.UserService;
-import com.project.module.repository.UserRepository;
 import com.project.module.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,8 +24,6 @@ public class AuthController {
 
     @Autowired
     private JwtService jwtService;
-    @Autowired
-    private UserRepository userRepository;
 
     @GetMapping("/test-api")
     public ResponseEntity<?> testApi(){
@@ -52,28 +47,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody LoginUserDto loginUserDto) throws Exception {
-        try{
-            Optional<User> findUser = userRepository.findByEmailAndPassword(loginUserDto.getEmail(), loginUserDto.getPassword());
-            if (findUser.isEmpty()) {
-                ResponseObject responseObject = new ResponseObject();
-                responseObject.setSuccess(false);
-                responseObject.setCode(HttpStatus.BAD_REQUEST.value());
-                responseObject.setMessage("User Not Found");
-                responseObject.setData(null);
-                return new ResponseEntity<>(responseObject, HttpStatus.BAD_REQUEST);
-            }
 
-            User userInformation = findUser.get();
-
-            String jwtToken = jwtService.generateToken(userInformation);
-
-            LoginResponse loginResponse = new LoginResponse();
-            loginResponse.setToken(jwtToken);
-            loginResponse.setExpiresIn(jwtService.getExpirationTime());
-
-            return ResponseEntity.ok(loginResponse);
-        }catch (Exception e){
-            throw e;
-        }
+        return authenticationService.login(loginUserDto);
     }
 }
