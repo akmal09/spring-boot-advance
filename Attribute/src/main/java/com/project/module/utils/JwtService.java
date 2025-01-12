@@ -20,8 +20,9 @@ public class JwtService {
     @Value("3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b")
     private String secretKey;
 
-    @Value("3600000")
-    private long jwtExpiration;
+    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 hours
+    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
 
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);
@@ -41,13 +42,17 @@ public class JwtService {
     }
 
     public long getExpirationTime(){
-        return jwtExpiration;
+        return EXPIRATION_TIME;
     }
 
     private String buildToken(Map<String, Object> claims, String subject){
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-                .signWith(SignatureAlgorithm.HS256, secretKey).compact();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails){
@@ -64,12 +69,7 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token){
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
     }
 
     private Key getSignInKey(){

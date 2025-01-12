@@ -20,7 +20,7 @@ public class SecurityConfig{
     private final AuthenticationProvider authenticationProvider;
     private final JwtRequestFilter jwtRequestFilter;
 
-    private static final String[] AUTH_WHITELIST = {"/auth/**", "/feature1/**"};
+    private static final String[] AUTH_WHITELIST = {"/auth/**"};
 
     public SecurityConfig(AuthenticationProvider authenticationProvider, JwtRequestFilter jwtRequestFilter){
         this.authenticationProvider = authenticationProvider;

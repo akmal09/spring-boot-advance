@@ -2,6 +2,7 @@ package com.project.module.authentication.service;
 
 import com.project.module.authentication.dto.LoginResponse;
 import com.project.module.base.ResponseObject;
+import com.project.module.entities.RefreshToken;
 import com.project.module.entities.User;
 import com.project.module.authentication.dto.LoginUserDto;
 import com.project.module.authentication.dto.RegisterUserDto;
@@ -27,6 +28,8 @@ public class AuthenticationService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtService jwtService;
+    @Autowired
+    private RefreshTokenService refreshTokenService;
 
     public User signup(RegisterUserDto input) {
         User user = new User();
@@ -52,11 +55,13 @@ public class AuthenticationService {
             }
 
             User userInformation = findUser.get();
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userInformation.getUsername());
 
             String jwtToken = jwtService.generateToken(userInformation);
 
             LoginResponse loginResponse = new LoginResponse();
-            loginResponse.setToken(jwtToken);
+            loginResponse.setAccessToken(jwtToken);
+            loginResponse.setRefreshToken(refreshToken.getToken());
             loginResponse.setExpiresIn(jwtService.getExpirationTime());
 
             return ResponseEntity.ok(loginResponse);
@@ -64,21 +69,4 @@ public class AuthenticationService {
             throw e;
         }
     }
-
-    public User authenticate(LoginUserDto input) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        input.getEmail(),
-                        input.getPassword()
-                )
-        );
-
-        return userRepository.findByEmail(input.getEmail())
-                .orElseThrow();
-    }
-
-    private boolean validatePassword(String password, String confirmPassword) {
-        return passwordEncoder.matches(password, confirmPassword);
-    }
-
 }
