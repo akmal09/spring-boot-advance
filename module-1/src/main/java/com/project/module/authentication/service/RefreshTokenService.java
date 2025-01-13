@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,11 +28,13 @@ public class RefreshTokenService {
     private JwtService jwtService;
 
 
-    public RefreshToken createRefreshToken(String username){
+    public RefreshToken createRefreshToken(String username, String jwt){
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .token(UUID.randomUUID().toString())
                 .expireDate(Instant.now().plusMillis(600000))
+                .accessToken(jwt)
+                .expireDateAccessToken(new Date(System.currentTimeMillis() + 1000 * 60 * 15))
                 .userId(userRepository.findByUsername(username).get().getId())
                 .build();
 
@@ -56,10 +59,6 @@ public class RefreshTokenService {
         String accessToken = jwtService.generateToken(userInfo);
 
         return new ResponseEntity<>(new JwtTokenResponseDTO(accessToken, refreshToken.getToken()), HttpStatus.OK);
-    }
-
-    public Optional<RefreshToken> findByToken(String token){
-        return refreshTokenRepository.findByToken(token);
     }
 
     public Boolean verifyExpiration(RefreshToken refreshToken){

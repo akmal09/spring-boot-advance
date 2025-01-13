@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Data
@@ -20,6 +21,8 @@ public class RefreshToken {
     private int id;
     private String token;
     private Instant expireDate;
+    private Date expireDateAccessToken;
+    private String accessToken;
     private Integer userId;
 
     @OneToOne

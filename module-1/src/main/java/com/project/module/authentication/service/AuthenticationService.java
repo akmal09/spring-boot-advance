@@ -55,9 +55,9 @@ public class AuthenticationService {
             }
 
             User userInformation = findUser.get();
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userInformation.getUsername());
 
             String jwtToken = jwtService.generateToken(userInformation);
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userInformation.getUsername(), jwtToken);
 
             LoginResponse loginResponse = new LoginResponse();
             loginResponse.setAccessToken(jwtToken);
