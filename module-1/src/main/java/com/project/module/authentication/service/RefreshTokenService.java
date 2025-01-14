@@ -32,9 +32,7 @@ public class RefreshTokenService {
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .token(UUID.randomUUID().toString())
-                .expireDate(Instant.now().plusMillis(600000))
-                .accessToken(jwt)
-                .expireDateAccessToken(new Date(System.currentTimeMillis() + 1000 * 60 * 15))
+                .expireDate(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
                 .userId(userRepository.findByUsername(username).get().getId())
                 .build();
 
@@ -62,7 +60,7 @@ public class RefreshTokenService {
     }
 
     public Boolean verifyExpiration(RefreshToken refreshToken){
-        if(refreshToken.getExpireDate().compareTo(Instant.now())<0){
+        if(refreshToken.getExpireDate().before(new Date())){
             refreshTokenRepository.delete(refreshToken);
             return false;
         }

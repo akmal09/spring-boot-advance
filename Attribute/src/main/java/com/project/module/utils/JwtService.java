@@ -1,6 +1,5 @@
 package com.project.module.utils;
 
-import com.project.module.entities.RefreshToken;
 import com.project.module.repository.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -67,14 +66,6 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token){
-//        Optional<RefreshToken> getAccessToken = refreshTokenRepository.findByAccessToken(token);
-//        if(getAccessToken.isEmpty()){
-//            return false;
-//        }
-//
-//        if(!getAccessToken.get().getExpireDateAccessToken().before(new Date())){
-//            return false;
-//        }
         return extractExpiration(token).before(new Date());
     }
 
@@ -85,10 +76,4 @@ public class JwtService {
     private Claims extractAllClaims(String token){
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
     }
-
-    public Boolean validateToken(String token, UserDetails userDetails){
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
-
 }

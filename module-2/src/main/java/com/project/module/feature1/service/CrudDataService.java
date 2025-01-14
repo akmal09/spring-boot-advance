@@ -3,7 +3,6 @@ package com.project.module.feature1.service;
 import com.project.module.entities.CrudData;
 import com.project.module.repository.CrudDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -27,7 +26,6 @@ public class CrudDataService {
         return crudDataRepository.findAll();
     }
 
-
     public CrudData getDataById(Integer id) {
         Optional<CrudData> crudData = crudDataRepository.findById(id);
         if(crudData.isEmpty()){
@@ -35,7 +33,6 @@ public class CrudDataService {
         }
         return crudData.get();
     }
-
 
     public CrudData update(Integer id, CrudData crudData) {
         CrudData existingData = getDataById(id);
@@ -45,7 +42,6 @@ public class CrudDataService {
 
         return crudDataRepository.save(existingData);
     }
-
 
     public void delete(Integer id) {
         CrudData existingData = getDataById(id);

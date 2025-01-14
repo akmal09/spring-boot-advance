@@ -20,9 +20,7 @@ public class RefreshToken {
     @GeneratedValue
     private int id;
     private String token;
-    private Instant expireDate;
-    private Date expireDateAccessToken;
-    private String accessToken;
+    private Date expireDate;
     private Integer userId;
 
     @OneToOne
