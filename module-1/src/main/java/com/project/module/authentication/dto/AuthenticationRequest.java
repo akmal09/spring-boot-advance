@@ -1,4 +1,4 @@
-package com.project.module.base;
+package com.project.module.authentication.dto;
 
 import lombok.Data;
 

@@ -1,0 +1,12 @@
+com.project.module.authentication
+com.project.module.authentication.controller
+com.project.module.authentication.dto
+com.project.module.authentication.service
+com.project.module.base
+com.project.module.config
+com.project.module.entities
+com.project.module.feature1
+com.project.module.feature1.controller
+com.project.module.feature1.service
+com.project.module.repository
+com.project.module.utils
